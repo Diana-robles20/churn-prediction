@@ -113,7 +113,7 @@ def save_processed_data(X_train, X_test, y_train, y_test, config):
     processed_path = config['paths']['processed_data']
 
     # Crear carpeta si no existe
-    #os.makedirs(processed_path, exist_ok=True)
+    os.makedirs(processed_path, exist_ok=True)
 
     # Guardar archivos
     X_train.to_csv(f"{processed_path}/X_train.csv", index=False)
