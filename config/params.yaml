@@ -1,0 +1,10 @@
+# Cuando Python lee la configuración,
+# lo hace como un diccionario
+
+data:
+  test_size: 0.2
+  random_state: 42
+
+paths:
+  raw_data: "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv"
+  processed_data: "data/processed"
