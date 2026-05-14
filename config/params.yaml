@@ -1,4 +1,5 @@
-select_model: 'RandomForest'
+#El usuario puede seleccionar entre 'LogisticRegression' o 'SVM'
+select_model: 'LogisticRegression'
 
 paths:
   model_path: 'models/model.pkl'
@@ -11,3 +12,6 @@ rf_params:
 
 lr_params:
   max_iter: 1000
+
+svm_params:
+  kernel: 'linear'
