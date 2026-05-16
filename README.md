@@ -3,122 +3,269 @@
 ## 🎯 Objetivo del Proyecto
 Construir un pipeline de Machine Learning modular, reproducible y colaborativo para predecir si un cliente de telecomunicaciones abandonará el servicio (**Churn**).
 
-El proyecto simula un entorno laboral real donde **4 roles especializados** deben integrar su código en un solo repositorio usando Git.
+El proyecto simula un entorno laboral real donde diferentes roles especializados integran su código en un solo repositorio utilizando Git y buenas prácticas de MLOps.
 
 ---
 
-## 📂 El Dataset
-Todos los equipos trabajarán con el dataset **Telco Customer Churn**.
+## 📂 Dataset
 
-*   **Fuente:** [Kaggle - Telco Customer Churn](https://www.kaggle.com/blastchar/telco-customer-churn)
-*   **Archivo:** `WA_Fn-UseC_-Telco-Customer-Churn.csv`
-*   **Problema:** Clasificación Binaria (¿El cliente se va? `Yes`/`No`)
-*   **Instrucción Importante:**
-    1.  Descarguen el CSV.
-    2.  Guárdenlo en la carpeta `data/raw/`.
-    3.  **NO suban el CSV a Git** (ya está configurado en `.gitignore` para evitar subir archivos pesados). Cada alumno debe descargarlo localmente.
+Todos los equipos trabajaron con el dataset **Telco Customer Churn**.
 
----
+- **Fuente:** https://www.kaggle.com/datasets/blastchar/telco-customer-churn
+- **Archivo:** `WA_Fn-UseC_-Telco-Customer-Churn.csv`
+- **Problema:** Clasificación binaria (`Churn = Yes/No`)
 
-## 👥 Roles y Responsabilidades (Equipos de 4)
+### 📥 Instrucciones para usar el dataset
 
-Cada miembro del equipo es responsable de un módulo específico. Deben definir sus "contratos de interface" (nombres de funciones y tipos de datos que pasan entre módulos) antes de empezar a codificar.
-
-### 1. 👷 Data Engineer (`src/data_loader.py`)
-**Tu misión:** Transformar datos brutos y sucios en datos limpios listos para entrenar.
-
-*   **Tareas Críticas:**
-    *   Cargar el CSV desde `data/raw/`.
-    *   **Limpieza:** La columna `TotalCharges` tiene espacios vacíos `" "` en lugar de nulos. Debes convertirla a numérico y manejar los NaN resultantes (ej. llenar con mediana o 0).
-    *   **Preprocesamiento:** Eliminar `customerID`. Codificar variables binarias (`gender`, `Partner`, `Churn`) de Texto a 0/1.
-    *   **División:** Separar en Train/Test usando `test_size` y `random_state` definidos en `config/params.yaml`.
-*   **Entregable:** Función `load_and_preprocess_data(config)` que retorna `X_train, X_test, y_train, y_test`.
-
-### 2. 🧠 ML Engineer (`src/model_trainer.py`)
-**Tu misión:** Experimentar con algoritmos y guardar el mejor modelo.
-
-*   **Tareas Críticas:**
-    *   Implementar una "Fábrica de Modelos" que permita elegir entre al menos **dos algoritmos** (ej. `RandomForest` y `SVM` o `LogisticRegression`) según el config.
-    *   Entrenar el modelo con los datos recibidos.
-    *   Calcular métricas clave: **Accuracy**, **Recall** (crítico para Churn) y **F1-Score**.
-    *   Guardar el modelo entrenado en la carpeta `models/` usando `joblib`.
-*   **Entregable:** Función `train_and_save_model(X_train, y_train, X_test, y_test, config)` que guarda el `.pkl` y retorna un diccionario de métricas.
-
-### 3. ⚙️ MLOps Engineer (`src/main.py` y `config/`)
-**Tu misión:** Orquestar el flujo y gestionar la configuración externa.
-
-*   **Tareas Críticas:**
-    *   Crear y mantener `config/params.yaml`. Debe incluir:
-        *   Parámetros de datos (`test_size`, `random_state`).
-        *   Parámetros del modelo (`model_name`, `n_estimators`, `C`, `kernel`, etc.).
-        *   Rutas de salida.
-    *   Escribir `src/main.py`: Este script debe importar las funciones del Data Engineer y del ML Engineer y ejecutarlas en orden.
-    *   Asegurar que el proyecto corra con el comando: `python -m src.main`.
-*   **Entregable:** Un `main.py` funcional que lea el YAML y ejecute el pipeline completo sin errores de importación.
-
-### 4. 🛡️ QA & Production Engineer (`src/predict.py` y `tests/`)
-**Tu misión:** Validar que el sistema funcione y preparar la inferencia para nuevos datos.
-
-*   **Tareas Críticas:**
-    *   Crear `src/predict.py`: Un script que cargue el modelo guardado (`models/model.pkl`) y permita predecir la clase de un nuevo cliente (ej. pasando una lista de características manualmente).
-    *   Manejo de Errores: Si el modelo no existe, el script debe dar un mensaje claro, no un error críptico.
-    *   Escribir tests básicos en `tests/test_pipeline.py` (ej. verificar que `load_data` no retorne DataFrames vacíos).
-*   **Entregable:** Un script de predicción robusto y al menos 2 tests unitarios pasando.
-
----
-
-## 🚀 Flujo de Trabajo con Git
-
-1.  **Clonar:** `git clone <url-del-repo-del-equipo>`
-2.  **Ramas:** Cada alumno crea su rama:
-    *   `git checkout -b feature/data-engineer`
-    *   `git checkout -b feature/ml-engineer`
-    *   `git checkout -b feature/mlops-engineer`
-    *   `git checkout -b feature/qa-engineer`
-3.  **Desarrollo:** Trabajen en paralelo. Hagan commits frecuentes.
-4.  **Integración:**
-    *   Cuando terminen, hagan `git push` de sus ramas.
-    *   El **MLOps Engineer** debe crear un Pull Request (o merge) integrando todas las ramas a `main`.
-    *   **Resuelvan conflictos juntos** si dos personas tocaron el mismo archivo (ej. `requirements.txt` o `main.py`).
-5.  **Prueba Final:** Ejecuten `python -m src.main` en la rama `main`. Si corre, ¡misión cumplida!
-
----
-
-## 📂 Estructura de Carpetas
+1. Descargar el archivo CSV desde Kaggle.
+2. Guardarlo en:
 
 ```text
-churn-mlops-project/
+data/raw/
+```
+
+3. El dataset NO debe subirse al repositorio Git.
+
+---
+
+## 👥 Roles y Responsabilidades
+
+### 👷 Data Engineer (`src/data_loader.py`)
+
+Responsable de:
+
+- Cargar el dataset.
+- Limpiar y transformar los datos.
+- Convertir `TotalCharges` a numérico.
+- Imputar valores faltantes.
+- Eliminar `customerID`.
+- Codificar variables binarias.
+- Dividir los datos en entrenamiento y prueba.
+
+---
+
+### 🧠 ML Engineer (`src/trainer_model.py`)
+
+Responsable de:
+
+- Implementar múltiples modelos de Machine Learning.
+- Entrenar los modelos.
+- Comparar métricas.
+- Seleccionar el mejor modelo.
+- Guardar el modelo entrenado usando `joblib`.
+
+Modelos implementados:
+
+- Random Forest
+- Logistic Regression
+- SVM
+
+---
+
+### ⚙️ MLOps Engineer (`src/main.py` y `config/params.yaml`)
+
+Responsable de:
+
+- Orquestar el pipeline completo.
+- Gestionar la configuración mediante YAML.
+- Integrar todos los módulos.
+- Garantizar la ejecución correcta del proyecto.
+
+El pipeline se ejecuta con:
+
+```bash
+python -m src.main
+```
+
+---
+
+### 🛡️ QA & Production Engineer (`src/predict.py` y `tests/`)
+
+Responsable de:
+
+- Crear el script de predicción.
+- Cargar el modelo entrenado.
+- Realizar predicciones de ejemplo.
+- Implementar pruebas unitarias.
+- Manejar errores de ejecución.
+
+Las pruebas se ejecutan con:
+
+```bash
+pytest
+```
+
+---
+
+## ⚙️ Configuración del Proyecto
+
+El archivo `config/params.yaml` contiene los hiperparámetros y rutas principales del proyecto.
+
+Ejemplo:
+
+```yaml
+select_model: 'LogisticRegression'
+
+paths:
+  model_path: 'models/model.pkl'
+  data_path: 'data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv'
+
+data:
+  test_size: 0.2
+  random_state: 42
+
+rf_params:
+  n_estimators: 100
+
+lr_params:
+  max_iter: 3000
+
+svm_params:
+  kernel: 'linear'
+```
+
+---
+
+## 🚀 Instalación y Ejecución
+
+### 1. Crear entorno virtual
+
+```bash
+python -m venv venv
+```
+
+### 2. Activar entorno virtual
+
+En Windows:
+
+```bash
+venv\Scripts\Activate
+```
+
+### 3. Instalar dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Ejecutar pipeline
+
+```bash
+python -m src.main
+```
+
+### 5. Ejecutar predicciones
+
+```bash
+python -m src.predict
+```
+
+### 6. Ejecutar pruebas unitarias
+
+```bash
+pytest
+```
+
+---
+
+## 📂 Estructura del Proyecto
+
+```text
+churn-prediction/
 ├── config/
-│   └── params.yaml          # Configuración centralizada
+│   └── params.yaml
+│
 ├── data/
-│   ├── raw/                 # WA_Fn-UseC_-Telco-Customer-Churn.csv (NO SUBIR)
-│   └── processed/           # (Opcional) Datos limpios
+│   └── raw/
+│       └── WA_Fn-UseC_-Telco-Customer-Churn.csv
+│
+├── models/
+│   └── model.pkl
+│
 ├── src/
 │   ├── __init__.py
-│   ├── data_loader.py       # Rol: Data Engineer
-│   ├── model_trainer.py     # Rol: ML Engineer
-│   ├── main.py              # Rol: MLOps Engineer
-│   └── predict.py           # Rol: QA Engineer
+│   ├── data_loader.py
+│   ├── trainer_model.py
+│   ├── main.py
+│   └── predict.py
+│
 ├── tests/
 │   ├── __init__.py
-│   └── test_pipeline.py     # Rol: QA Engineer
-├── models/                  # Modelos .pkl generados (NO SUBIR o subir solo el final)
-├── requirements.txt         # Dependencias
-├── .gitignore               # Reglas de exclusión
-└── README.md                # Este archivo
+│   └── test_pipeline.py
+│
+├── requirements.txt
+├── .gitignore
+└── README.md
+```
+
+---
+
+## 📊 Resultados del Mejor Modelo
+
+Después de ejecutar el pipeline y comparar los modelos, el mejor modelo obtenido fue:
+
+### 🏆 Modelo Ganador
+
+`LogisticRegression`
+
+### 📈 Métricas Obtenidas
+
+| Métrica | Valor |
+|---|---|
+| Accuracy | 0.8211 |
+| Recall | 0.6059 |
+| F1-Score | 0.6420 |
+
+El modelo entrenado fue almacenado exitosamente en:
+
+```text
+models/model.pkl
+```
+
+---
+
+## 🧪 Pruebas Unitarias
+
+Se implementaron pruebas unitarias básicas para validar:
+
+- Que el preprocesamiento de datos no devuelva DataFrames vacíos.
+- Que el entrenamiento del modelo retorne las métricas esperadas.
+- Que el pipeline funcione correctamente.
+
+Resultado:
+
+```text
+2 passed
 ```
 
 ---
 
 ## ✅ Checklist de Entrega
 
-*   [ ] El comando `python -m src.main` ejecuta todo el pipeline sin errores.
-*   [ ] El archivo `config/params.yaml` existe y controla los hiperparámetros.
-*   [ ] Hay al menos 2 modelos diferentes implementados en el código.
-*   [ ] El script `predict.py` carga el modelo y hace una predicción de ejemplo.
-*   [ ] El historial de Git muestra contribuciones de los 4 miembros del equipo.
-*   [ ] El `README.md` final incluye los resultados obtenidos (Accuracy/Recall del mejor modelo).
+- [x] El comando `python -m src.main` ejecuta todo el pipeline sin errores.
+- [x] El archivo `config/params.yaml` existe y controla hiperparámetros.
+- [x] Hay al menos 2 modelos implementados.
+- [x] `predict.py` carga el modelo y realiza una predicción.
+- [x] Existen pruebas unitarias funcionales.
+- [x] El README incluye métricas del mejor modelo.
+- [x] El proyecto utiliza configuración modular y reproducible.
 
+---
 
+## 🤖 LLM Contribution
 
-¡Éxito con la clase! Es un ejercicio excelente para ver quién realmente entiende la integración de sistemas. 🚀
+Durante el desarrollo del proyecto se utilizaron herramientas de inteligencia artificial como ChatGPT y Gemini para:
+
+- Ayudar en la estructuración del pipeline de MLOps.
+- Resolver errores de integración entre módulos.
+- Generar y corregir pruebas unitarias.
+- Apoyar en la configuración del entorno virtual y dependencias.
+- Mejorar la documentación y organización del proyecto.
+
+Todo el código generado fue revisado, comprendido y adaptado por los integrantes del equipo.
+
+---
+
+## 🚀 Conclusión
+
+Este proyecto permitió aplicar conceptos fundamentales de MLOps, integración de pipelines, pruebas unitarias, control de versiones y trabajo colaborativo utilizando Machine Learning en un entorno similar al laboral.
