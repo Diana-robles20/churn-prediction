@@ -1,10 +1,25 @@
 # Cuando Python lee la configuración,
 # lo hace como un diccionario
 
+# El usuario puede seleccionar entre
+# 'LogisticRegression' o 'SVM'
+
+select_model: 'LogisticRegression'
+
+paths:
+  model_path: 'models/model.pkl'
+  raw_data: 'data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv'
+  processed_data: 'data/processed'
+
 data:
   test_size: 0.2
   random_state: 42
 
-paths:
-  raw_data: "data/raw/WA_Fn-UseC_-Telco-Customer-Churn.csv"
-  processed_data: "data/processed"
+rf_params:
+  n_estimators: 100
+
+lr_params:
+  max_iter: 3000
+
+svm_params:
+  kernel: 'linear'
