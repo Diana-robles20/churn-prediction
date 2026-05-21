@@ -184,6 +184,7 @@ churn-prediction/
 │
 ├── src/
 │   ├── __init__.py
+│   ├── api.py
 │   ├── data_loader.py
 │   ├── trainer_model.py
 │   ├── main.py
@@ -263,6 +264,50 @@ Durante el desarrollo del proyecto se utilizaron herramientas de inteligencia ar
 - Mejorar la documentación y organización del proyecto.
 
 Todo el código generado fue revisado, comprendido y adaptado por los integrantes del equipo.
+
+---
+
+---
+
+## 🌐 API REST con FastAPI
+
+Como funcionalidad adicional, el proyecto incluye una API REST desarrollada con FastAPI para realizar inferencias utilizando el modelo entrenado.
+
+### ▶️ Ejecutar API
+
+```bash
+uvicorn src.api:app --reload
+```
+
+La API estará disponible en:
+
+```text
+http://127.0.0.1:8000
+```
+
+### 📄 Documentación automática
+
+FastAPI genera automáticamente documentación interactiva Swagger UI:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+### 🔍 Endpoints disponibles
+
+| Endpoint | Método | Descripción |
+|---|---|---|
+| `/` | GET | Verifica que la API esté funcionando |
+| `/health` | GET | Endpoint de estado |
+| `/predict` | GET | Realiza una predicción usando el modelo entrenado |
+
+### ✅ Ejemplo de respuesta
+
+```json
+{
+  "prediction": 0
+}
+```
 
 ---
 
